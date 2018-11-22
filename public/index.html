@@ -1,0 +1,133 @@
+<html>
+
+<head>
+  <title>WebSocket Chat - PS</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+</head>
+
+<body>
+
+  <header>
+    <div class="collapse bg-dark" id="navbarHeader">
+      <div class="container">
+        <div class="row">
+          <div class="col-12 py-4">
+            <h4 class="text-white">Protocolos de Seguridad - WebSocket</h4>
+            <p class="text-muted">Demostración del uso de WebSocket para la asignatura Protocolos de Seguridad del Máster en Seguridad Informática de la Universidad de Jaén.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="navbar navbar-dark bg-dark shadow-sm">
+      <div class="container d-flex justify-content-between">
+        <a href="#" class="navbar-brand d-flex align-items-center">
+            <strong>WebSocket Chat - PS</strong>
+          </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container mt-3">
+
+    <div class="row">
+      <div class="col-md-12">
+        <h1>Mensajes</h1>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col" style="width:25%">Hora</th>
+              <th scope="col" style="width:25%">Usuario</th>
+              <th scope="col" style="width:50%">Mensaje</th>
+            </tr>
+          </thead>
+          <tbody id="messages">
+
+          </tbody>
+        </table>
+
+        <div class="input-group mb-3 mt-3">
+          <div class="input-group-prepend">
+            <input id="user" type="text" class="input-group-text" placeholder="Usuario...">
+          </div>
+          <input id="message" type="text" class="form-control" placeholder="Nuevo mensaje...">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" onclick="send()">Enviar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+  <!-- Bootstrap 4 -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+  <!-- Toastr -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+  <!-- Socket.io Client-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+  <!-- WebSocket Client -->
+  <script>
+    var socket = io(); //load socket.io-client and connect to the host that serves the page
+
+    /** Load messages on load **/
+    socket.on('init', function(data) {
+      document.getElementById("messages").innerHTML = "";
+      for (variable of data) {
+        document.getElementById("messages").innerHTML += "<tr><td>" + new Date(variable.date).toLocaleDateString() + " " + new Date(variable.date).toLocaleTimeString() + "</td><td>" + variable.user + "</td><td>" + variable.message + "</td></tr>";
+        console.log(variable);
+      }
+    });
+
+    /** Send **/
+    function send() {
+      // Get message input value
+      var message = document.getElementById("message").value;
+      var user = document.getElementById("user").value;
+
+      // End and notify if message is empty
+      if (!message) {
+        toastr.warning('No hay mensaje para enviar');
+        return;
+      };
+
+      // End and notify if user is empty
+      if (!user) {
+        toastr.warning('Debe indicar su nombre');
+        return;
+      };
+
+      var aux = {
+        message: message,
+        user: user
+      };
+
+      // Send socket message
+      socket.emit("newMessage", aux);
+
+      // Clean input and notify
+      document.getElementById("message").value = "";
+      toastr.success('Mensaje enviado');
+    }
+
+    /** Receive **/
+    socket.on('', function(data) {
+      console.log('');
+    });
+  </script>
+
+</body>
+
+</html>
