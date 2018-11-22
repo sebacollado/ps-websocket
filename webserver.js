@@ -4,7 +4,8 @@ var io = require('socket.io')(http) //require socket.io module and pass the http
 
 http.listen(8080); //listen to port 8080
 
-function handler(req, res) { //create server
+/** Web Server **/
+function handler(req, res) { 
   fs.readFile(__dirname + '/public/index.html', function(err, data) { //read file index.html in public folder
     if (err) {
       res.writeHead(404, {
@@ -33,11 +34,6 @@ io.sockets.on('connection', function(socket) {
   socket.on('newMessage', function(message) {
     var aux = message;
     aux.date = new Date();
-
-    /*var aux = {
-      message: message,
-      date: new Date()
-    };*/
 
     messages.push(aux);
     console.log(messages);
