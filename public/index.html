@@ -84,6 +84,7 @@
 
     /** Load messages on load **/
     socket.on('init', function(data) {
+      console.log("Recargando mensajes del chat vía WebSocket");
       document.getElementById("messages").innerHTML = "";
       for (variable of data) {
         document.getElementById("messages").innerHTML += "<tr><td>" + new Date(variable.date).toLocaleDateString() + " " + new Date(variable.date).toLocaleTimeString() + "</td><td>" + variable.user + "</td><td>" + variable.message + "</td></tr>";
@@ -120,12 +121,8 @@
       // Clean input and notify
       document.getElementById("message").value = "";
       toastr.success('Mensaje enviado');
+      console.log("Mensaje enviado al servidor mediante WebSocket", aux);
     }
-
-    /** Receive **/
-    socket.on('', function(data) {
-      console.log('');
-    });
   </script>
 
 </body>
