@@ -45,12 +45,3 @@ node webserver.js
 5. Configurar la salida del servicio al exterior.
 
     Este paso depende del entorno donde se realice el despliegue. Generalmente se debe exponer el puerto 80 (donde sirve Node.js en este proyecto) hacia el 80 de la instancia/máquina donde se ejecute.
-
-## Autores
-Sebastián Collado Montañez
-
-Juan Ramón Moral Cárdenas
-
-Manuel Jesús Negrillo Díaz
-
-Andrés del Río Tassara
